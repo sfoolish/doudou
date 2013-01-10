@@ -1,3 +1,9 @@
-print 'Content-Type: text/plain'
-print ''
-print 'Hello, doudou! I\'m in GAE'
+import webapp2
+
+class MainPage(webapp2.RequestHandler):
+  def get(self):
+      self.response.headers['Content-Type'] = 'text/plain'
+      self.response.out.write('Hello, doudou World!')
+
+app = webapp2.WSGIApplication([('/', MainPage)],
+                              debug=True)
