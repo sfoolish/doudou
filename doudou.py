@@ -4,6 +4,7 @@ import urllib
 import webapp2
 import jinja2
 import os
+from urlparse import urlparse, parse_qs
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -17,52 +18,59 @@ class Greeting(db.Model):
     content = db.StringProperty(multiline=True)
     date = db.DateTimeProperty(auto_now_add=True)
 
-
 def guestbook_key(guestbook_name=None):
     """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
     return db.Key.from_path('Guestbook', guestbook_name or 'default_guestbook')
 
-
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        guestbook_name=self.request.get('guestbook_name')
-        greetings_query = Greeting.all().ancestor(
-            guestbook_key(guestbook_name)).order('-date')
-        greetings = greetings_query.fetch(10)
-
-        if users.get_current_user():
-            url = users.create_logout_url(self.request.uri)
-            url_linktext = 'Logout'
-        else:
-            url = users.create_login_url(self.request.uri)
-            url_linktext = 'Login'
-
-        template_values = {
-            'greetings': greetings,
-            'url': url,
-            'url_linktext': url_linktext,
-        }
-
-        template = jinja_environment.get_template('index.html')
-        self.response.out.write(template.render(template_values))
-
+        self.response.out.write("""
+            <html>
+              <head>
+                <meta charset="utf-8" />
+              </head>
+              <body>
+                <header>doudou account number</header>
+                <h1>welcome to doudou</h1>
+                <div>
+                  <form name="register" action="sign" method="post">
+                    <div class="item"><label>   email</label><input type="text" name="email" maxlength="60" class="basic-input"></div>
+                    <div class="item"><label>password</label><input type="password" name="password" maxlength="20" class="basic-input"></div>
+                    <div class="item"><label>    name</label><input type="text" name="name" maxlength="15" class="basic-input"></div>
+                    <input type="submit" value="regist" title="agree"/>
+                  </form>
+                </div>
+                <footer></footer>
+              </body>
+            </html>
+            """)
 
 class Guestbook(webapp2.RequestHandler):
     def post(self):
-        # We set the same parent key on the 'Greeting' to ensure each greeting is in
-        # the same entity group. Queries across the single entity group will be
-        # consistent. However, the write rate to a single entity group should
-        # be limited to ~1/second.
-        guestbook_name = self.request.get('guestbook_name')
-        greeting = Greeting(parent=guestbook_key(guestbook_name))
+        email = self.request.get('email')
+        password = self.request.get('password')
+        name = self.request.get('name')
+        self.redirect('/welcome/?' + urllib.urlencode({'name' : name, 'email' : email}))
 
-        if users.get_current_user():
-            greeting.author = users.get_current_user().nickname()
+class Welcome(webapp2.RequestHandler):
+    def get(self):
+        o = urlparse(self.request.uri).query
+        params = parse_qs(o)
 
-        greeting.content = self.request.get('content')
-        greeting.put()
-        self.redirect('/?' + urllib.urlencode({'guestbook_name': guestbook_name}))
+        self.response.out.write("""
+            <html>
+              <head>
+                <meta charset="utf-8" />
+              </head>
+              <body>
+                <h1>welcome to doudou</h1>
+                <h2>%s(%s)</h2>
+              </body>
+            </html>
+        """ % (params["name"], params["email"]))
 
-app = webapp2.WSGIApplication([('/', MainPage),
-                               ('/sign', Guestbook)],
+app = webapp2.WSGIApplication([('/welcome/', Welcome),
+                               ('/', MainPage),
+                               ('/sign', Guestbook)
+                               ],
                               debug=True)
