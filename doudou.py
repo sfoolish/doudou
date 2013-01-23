@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import cgi
 import datetime
 import urllib
@@ -34,10 +35,10 @@ class MainPage(webapp2.RequestHandler):
                 <h1>welcome to doudou</h1>
                 <div>
                   <form name="register" action="sign" method="post">
-                    <div class="item"><label>   email</label><input type="text" name="email" maxlength="60" class="basic-input"></div>
-                    <div class="item"><label>password</label><input type="password" name="password" maxlength="20" class="basic-input"></div>
-                    <div class="item"><label>    name</label><input type="text" name="name" maxlength="15" class="basic-input"></div>
-                    <input type="submit" value="regist" title="agree"/>
+                    <div class="item"><label>邮箱：</label><input type="text" name="email" maxlength="60" class="basic-input"></div>
+                    <div class="item"><label>密码：</label><input type="password" name="password" maxlength="20" class="basic-input"></div>
+                    <div class="item"><label>名字：</label><input type="text" name="name" maxlength="15" class="basic-input"></div>
+                    <input type="submit" value="注册" title="agree"/>
                   </form>
                 </div>
                 <footer></footer>
@@ -63,7 +64,7 @@ class Welcome(webapp2.RequestHandler):
                 <meta charset="utf-8" />
               </head>
               <body>
-                <h1>welcome to doudou</h1>
+                <h1>欢迎来到 doudou</h1>
                 <h2>%s(%s)</h2>
               </body>
             </html>
