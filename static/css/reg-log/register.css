@@ -1,0 +1,16 @@
+header{ width: 1000px; margin: 20px auto; color: #087314; font-size: 24px; font-family: '微软雅黑'; }
+.content,footer{ width: 1000px; margin: 0px auto;}
+.content h1{ color: #494949; font-size: 24px; font-weight: bold; margin-bottom: 14px;}
+.content .form{margin-bottom: 50px; float: left;}
+.content .item{ margin: 0px 0px 14px;}
+.content .item label{ font-size: 14px; color: #111; width: 60px; display: inline-block; text-align: right;}
+.content .item input.basic-input{ border: 1px solid #C9C9C9; border-radius: 3px; padding: 6px 2px; margin-left: 10px; width: 200px;}
+.content .bnt{ cursor: pointer; font-size: 14px; padding: 6px 26px; border-radius: 3px; font-weight: bold; margin-left: 10px;}
+.content .disabled{ color: #999; background: #f0f0f0; border: 1px solid #b9b9b9;}
+.content .tip{ color: gray; font-size: 12px; padding-left: 68px;}
+.content .agreement{ padding-left: 68px;}
+.content .login{ float: right;}
+.content .form-login .bnt{ cursor: pointer; color: white; background: #3fa156; border: 1px solid #528641;}
+.content .form-login .bnt:hover{ background-color: #4fca6c; border-color: #6aad54;}
+
+footer{ border-top: 1px dashed #ddd; color: #999; clear: both;}

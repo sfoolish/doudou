@@ -11,7 +11,7 @@ from google.appengine.ext import db
 from google.appengine.api import users
 
 jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+    loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), 'templates')))
 
 class Greeting(db.Model):
     """Models an individual Guestbook entry with an author, content, and date."""
@@ -25,26 +25,8 @@ def guestbook_key(guestbook_name=None):
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        self.response.out.write("""
-            <html>
-              <head>
-                <meta charset="utf-8" />
-              </head>
-              <body>
-                <header>doudou account number</header>
-                <h1>welcome to doudou</h1>
-                <div>
-                  <form name="register" action="sign" method="post">
-                    <div class="item"><label>邮箱：</label><input type="text" name="email" maxlength="60" class="basic-input"></div>
-                    <div class="item"><label>密码：</label><input type="password" name="password" maxlength="20" class="basic-input"></div>
-                    <div class="item"><label>名字：</label><input type="text" name="name" maxlength="15" class="basic-input"></div>
-                    <input type="submit" value="注册" title="agree"/>
-                  </form>
-                </div>
-                <footer></footer>
-              </body>
-            </html>
-            """)
+        template = jinja_environment.get_template('register.html')
+        self.response.out.write(template.render())
 
 class Guestbook(webapp2.RequestHandler):
     def post(self):
@@ -53,25 +35,24 @@ class Guestbook(webapp2.RequestHandler):
         name = self.request.get('name')
         self.redirect('/welcome/?' + urllib.urlencode({'name' : name, 'email' : email}))
 
-class Welcome(webapp2.RequestHandler):
+class Login(webapp2.RequestHandler):
     def get(self):
         o = urlparse(self.request.uri).query
         params = parse_qs(o)
 
-        self.response.out.write("""
-            <html>
-              <head>
-                <meta charset="utf-8" />
-              </head>
-              <body>
-                <h1>欢迎来到 doudou</h1>
-                <h2>%s(%s)</h2>
-              </body>
-            </html>
-        """ % (params["name"], params["email"]))
+        template = jinja_environment.get_template('login.html')
+        self.response.out.write(template.render())
 
-app = webapp2.WSGIApplication([('/welcome/', Welcome),
+class Register(webapp2.RequestHandler):
+    def get(self):
+        o = urlparse(self.request.uri).query
+        params = parse_qs(o)
+
+        template = jinja_environment.get_template('register.html')
+        self.response.out.write(template.render())
+
+app = webapp2.WSGIApplication([('/login', Login),
                                ('/', MainPage),
-                               ('/sign', Guestbook)
+                               ('/register', Register)
                                ],
                               debug=True)
